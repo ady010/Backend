@@ -6,6 +6,10 @@
     <title>Document</title>
 </head>
 <body>
-    
+    <div class="det">
+        <%= alluser.array.forEach(element => {%>
+            <h1><%=element.name%></h1>            
+            <%})%>
+    </div>
 </body>
 </html>
