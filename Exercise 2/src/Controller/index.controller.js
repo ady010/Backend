@@ -43,3 +43,21 @@ module.exports.showPost = async (req, res)=>{
     const name = await userModel.find()
     res.render("home" , {post,name} )
 }
+
+module.exports.incLike = async (req, res)=>{
+    const {id} = req.body 
+    const like = await postModel.findOneAndUpdate(
+        {_id : id},
+        {$inc : {like: 1}},
+        {new: true})
+
+        res.redirect("/home")
+}
+
+module.exports.Delete = async (req, res)=>{
+    const {id} = req.body
+    const del = await postModel.findOneAndDelete(
+        {_id : id},
+    )
+    res.redirect("/home")
+}
