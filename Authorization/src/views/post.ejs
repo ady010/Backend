@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Post</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/framer-motion/10.12.13/framer-motion.umd.min.js"></script>
+    <style>
+        /* Glassmorphism Styling */
+        .glass {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 1rem;
+        }
+
+        /* Cursor Ripple Effect */
+        .cursor {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 20px;
+            height: 20px;
+            background: rgba(255, 255, 255, 0.4);
+            border: 2px solid rgba(255, 255, 255, 0.6);
+            border-radius: 50%;
+            pointer-events: none;
+            transform: translate(-50%, -50%);
+            animation: ripple 2s infinite;
+        }
+
+        @keyframes ripple {
+            0% {
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 1;
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(2);
+                opacity: 0;
+            }
+        }
+
+        /* Three.js Background */
+        #threejs-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -10;
+        }
+
+        /* Page Scroll Styling */
+        body {
+            overflow-y: auto;
+            scroll-behavior: smooth;
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-white relative overflow-x-hidden">
+    <!-- Ripple Cursor -->
+    <div class="cursor"></div>
+
+    <!-- Three.js Background -->
+    <div id="threejs-bg"></div>
+
+    <!-- Form Section -->
+    <form action="/create-post" method="post" class="glass bg-gray-800 shadow-2xl p-8 w-full max-w-md mx-auto mt-20 border border-gray-700 transition-transform duration-300 hover:scale-105">
+        <h2 class="text-3xl font-bold mb-6 text-center text-gradient bg-clip-text bg-gradient-to-r from-blue-400 to-green-400 animate-pulse">
+            Create Post
+        </h2>
+        <div class="space-y-6">
+            <!-- Image URL Input -->
+            <div>
+                <label for="img" class="block text-sm font-medium ">Image URL</label>
+                <input 
+                    type="text" 
+                    name="img" 
+                    id="img" 
+                    placeholder="Insert image URL" 
+                    class="w-full px-4 py-3 bg-gray-900 text-white border  rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300"
+                >
+            </div>
+            <!-- Caption Input -->
+            <div>
+                <label for="caption" class="block text-sm font-medium   ">Caption</label>
+                <input 
+                    type="text" 
+                    name="caption" 
+                    id="caption" 
+                    placeholder="Write a caption" 
+                    class="w-full px-4 py-3 bg-gray-900 text-white border  rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300"
+                >
+            </div>
+            <!-- Submit Button -->
+            <button 
+                class="w-full bg-gradient-to-r from-orange-500 to-pink-500 text-black font-bold py-3 rounded-lg shadow-lg hover:scale-105 hover:shadow-xl transition-transform duration-300 flex justify-center items-center"
+            >
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+                </svg>
+                Create
+            </button>
+        </div>
+    </form>
+
+    <script>
+        // Cursor Ripple Motion
+        const cursor = document.querySelector(".cursor");
+        document.addEventListener("mousemove", (e) => {
+            cursor.style.top = `${e.clientY}px`;
+            cursor.style.left = `${e.clientX}px`;
+        });
+
+        // Three.js Background
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.getElementById("threejs-bg").appendChild(renderer.domElement);
+
+        // Add a plane geometry that ripples
+        const planeGeometry = new THREE.PlaneGeometry(30, 30, 32, 32);
+        const planeMaterial = new THREE.MeshBasicMaterial({ color: 0x0077ff, wireframe: true });
+        const plane = new THREE.Mesh(planeGeometry, planeMaterial);
+        scene.add(plane);
+
+        plane.rotation.x = -Math.PI / 2;
+        camera.position.y = 5;
+        camera.position.z = 10;
+
+        function animate() {
+            requestAnimationFrame(animate);
+
+            // Ripple effect on the plane
+            planeGeometry.vertices.forEach((vertex, index) => {
+                vertex.z = Math.sin((index + Date.now() * 0.001) % Math.PI * 2) * 0.5;
+            });
+            planeGeometry.verticesNeedUpdate = true;
+
+            renderer.render(scene, camera);
+        }
+        animate();
+    </script>
+</body>
+</html>
