@@ -1,14 +1,12 @@
-const mongoose = require('mongoose')
+const mongoose = require("mongoose")
 
 
-const connect = ()=>{
+const connect = ()=> {mongoose.connect("mongodb://0.0.0.0/auth")
+     .then(()=>{
+    console.log("Connected to database");
+})
+.catch((err)=>{
+    console.log("Connection failed",err); 
+})}
 
-    mongoose.connect(process.env.MONGO_URL).then(()=>{
-        console.log("connected to db");
-    })
-    .catch(err=>{
-        console.log('Errrror');
-    })
-}
-
-module.exports = connect
+module.exports = connect;
