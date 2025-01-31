@@ -29,13 +29,13 @@ module.exports.loginContr = async(req, res)=>{
     const {email,password} = req.body
     const user = await userModel.findOne({email:email})
     if(!user){
-        res.status(401).json({
+        return res.status(401).json({
             message : "Enter Valid email or password"
         })
     }
     const ismatched = bcrypt.compare(password, user.password)
     if(!ismatched){
-        res.status(401).json({
+        return res.status(401).json({
             message: "Enter valid email or Password"
         })
     }
