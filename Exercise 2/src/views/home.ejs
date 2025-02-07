@@ -31,7 +31,7 @@
       }
     </style>
   </head>
-  <body class="bg-gray-900 text-white relative overflow-x-hidden">
+  <body class="bg-white-200 text-white relative overflow-x-hidden">
     <div class="post flex flex-col gap-10 items-center py-10 px-4">
       <!-- Header -->
       <div class="flex justify-between w-full">
@@ -69,14 +69,14 @@
 
       <!-- User Cards -->
       <% post.forEach(user => { %>
-        <div class="glass w-[30rem] h-[32rem] p-6 rounded-lg shadow-lg border border-gray-800 flex flex-col items-center">
+        <div class="glass w-[30rem] h-[32rem] p-3 rounded-lg shadow-2xl border flex flex-col items-center">
           <img
             src="<%= user.img %>"
             alt="User Image"
             class="w-full h-[19rem] object-cover rounded-md shadow-md"
           />
           <div class="mt-4 w-full">
-            <p class="text-sm text-gray-300 mb-4"><%= user.caption %></p>
+            <p class="text-sm text-black mb-4"><%= user.caption %></p>
             <!-- Like Button -->
              <form action="/like" method="post">
               <input type="hidden" name="id" value="<%= user._id %>">

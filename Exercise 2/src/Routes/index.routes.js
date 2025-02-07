@@ -1,5 +1,5 @@
 const {Router} = require('express') 
-const { indexController, createUser, showName, showPost , createPost, createController, incLike, Delete } = require('../Controller/index.controller')
+const { indexController, createUser, showPost, createPost, createController, incLike, Delete,loginController,userLogincontroller } = require('../Controller/index.controller')
 const router = Router()
 
 
@@ -10,6 +10,8 @@ router.post("/create-post", createPost)
 router.get("/home", showPost)
 router.post("/like", incLike)
 router.post("/delete", Delete )
+router.get("/login", loginController )
+router.post("/login", userLogincontroller )
 
 
 

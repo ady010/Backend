@@ -1,18 +1,24 @@
 const postModel = require("../Models/post.model")
 const userModel = require("../Models/user.model")
+const jwt = require("jsonwebtoken")
+const bcrypt = require("bcrypt")
+
 
 module.exports.indexController = (req, res)=>{
-    res.render("index")
+    res.render("login")
 }
 
 module.exports.createUser = async (req, res)=>{
-    const { name, email, bio, img } = req.body
+    const { name, email, password, bio, img } = req.body
+
+    const hash = await bcrypt.hash(password, 10)
 
     const newUser = await userModel.create({
         name,
         email,
+        password: hash,
         bio,
-        img
+        img,
     })
     // console.log(newUser);
     res.redirect("/home")
@@ -61,3 +67,25 @@ module.exports.Delete = async (req, res)=>{
     )
     res.redirect("/home")
 }
+
+//Login page
+
+module.exports.loginController = async (req,res)=>{
+    res.render("login")
+}
+
+module.exports.userLogincontroller = async (req,res)=>{
+
+    const {email, password} = req.body;
+    const user = await userModel.findOne({ email: email })
+
+    // console.log(email, user);
+    
+    if(await bcrypt.compare(password, user.password))
+        res.redirect("/home")
+    else{
+        res.redirect("/login")
+    }
+}
+
+
