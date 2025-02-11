@@ -26,21 +26,16 @@ module.exports.registercontroller = async (req, res) => {
       return res.status(400).json({ message: "Already exists" });
     }
 
-    const hashed = await bcrypt.hash(password, 10);
+    const hashed = await userModel.hashPass(password);
 
     const user = await userModel.create({
       username,
       email,
-      passwaord: hashed,
+      password: hashed,
     });
-    const token = jwt.sign(
-      {
-        id: user._id,
-        username: user.username,
-        email: user.email,
-      },
-      config.JWT_SECRET
-    );
+
+    const token = user.generateToken()
+
     res.status(200).json({ message: token, user });
   } catch (error) {
     res.status(400).json({ message: error.message });
@@ -54,26 +49,20 @@ module.exports.logincontroller = async (req, res)=>{
     const user = await userModel.findOne({
         email
       });
+
       if(!user){
         res.status(400).json({message:"Invalid Credantials"})
       }
-      const isMatch = await bcrypt.compare(password, user.passwaord)
+      const isMatch = await userModel.comparePass(password, user.password)
       if(!isMatch){
         res.status(400).json({message:"Invalis Credantials"})
       }
 
-
-      const token = jwt.sign(
-        {
-          id: user._id,
-          username: user.username,
-          email: user.email,
-        },
-        config.JWT_SECRET
-      );
+      const token = user.generateToken()
 
       res.status(200).json({message: token, user})
 }
+
 
 module.exports.profilecontroller = (req, res)=>{
     res.send(req.user)
