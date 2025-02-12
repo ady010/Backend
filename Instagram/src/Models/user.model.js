@@ -26,7 +26,11 @@ const userSchema = new mongoose.Schema({
     },
     password:{
         type:String
-    }
+    },
+    posts:[{
+        type:mongoose.Types.ObjectId,
+        ref:"post",
+    },]
 })
 
 
@@ -40,7 +44,7 @@ userSchema.methods.generateToken = function(){
         config.JWT_SECRET
     )
 }
-
+ 
 userSchema.statics.verifyToken = function (token){
     return jwt.verify(token, config.JWT_SECRET)
 }

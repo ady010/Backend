@@ -1,7 +1,7 @@
 const userModel = require("../Models/user.model");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
-const config = require("../config/config");
+const config = require("../config/config"); 
 
 module.exports.registercontroller = async (req, res) => {
   try {
@@ -55,7 +55,7 @@ module.exports.logincontroller = async (req, res)=>{
       }
       const isMatch = await userModel.comparePass(password, user.password)
       if(!isMatch){
-        res.status(400).json({message:"Invalis Credantials"})
+        res.status(400).json({message:"Invalid Credantials"})
       }
 
       const token = user.generateToken()
@@ -65,5 +65,6 @@ module.exports.logincontroller = async (req, res)=>{
 
 
 module.exports.profilecontroller = (req, res)=>{
-    res.send(req.user)
+  const profile = userModel.findById.populate("posts")
+    res.send(profile)
 }
