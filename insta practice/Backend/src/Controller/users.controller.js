@@ -1,45 +1,80 @@
-const userModel = require("../Models/users.models")
-const jwt = require("jsonwebtoken")
-const bcrypt = require('bcryptjs')
+const userModel = require("../Models/users.models");
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcryptjs");
+const config = require("../config/config");
 
 module.exports.registerController = async (req, res) => {
     try {
-        const { username, email, password } = req.body
+        const { username, email, password } = req.body;
 
         if (!username || !email || !password) {
             return res.status(400).json({
-                message: "Please fill all the fields"
-            })
+                message: "Please fill all the fields",
+            });
         }
         const isUserExists = await userModel.findOne({
-            $or: [{ user }],
+            $or: [{ username },{email}],
 
-            if(isUserExists) {
-                return res.status(400).json({
-                    message: "User already Exists"
-                })
-            }
         })
-        const hash = await bcrypt.hash(password, 10)
+        if (isUserExists) {
+            return res.status(400).json({
+                message: "User already Exists",
+            });
+        }
+
+        const hash = await bcrypt.hash(password, 10);
         const user = await userModel.create({
             username,
             email,
-            password: hash
-        })
+            password: hash,
+        });
 
-        const token = jwt.sign({
+        const token = jwt.sign(
+            {
+                id: user._id,
+            },
+            config.KEY
+        );
+        res.status(201).json({message: user, token});
+    } catch {
+        res.status(400).json({ message: "catch block" });
+    }
+};
+
+module.exports.loginController = async (req, res) => {
+    const { email, password } = req.body;
+
+    const user = await userModel.findOne({ email: email });
+    if (!user) {
+        return res.status(400).json({ message: "Invalid Credantials" });
+    }
+    const ismatched = await bcrypt.compare(password, user.password);
+    if (!ismatched) {
+        return res.status(400).json({ message: "Invalid Credantials" });
+    }
+
+    const token = jwt.sign(
+        {
             id: user._id,
-        }, "secret"
-        )
-        res.status(201).json(token, user)
-    }
-    catch {
-        res.status(400).json({ message: "Error" })
-    }
-}
+        },
+        config.KEY
+    );
+    res.status(200).json({ message: "Login Succsss", token });
+};
 
-module.exports.loginController = (req, res) => {
-    const { email, password } = req.body
+module.exports.profileController = (req, res) => {
 
-    const user = userModel.findOne({})
-}
+    try {
+
+        const token = localStorage.getItem('token')
+        const id = jwt.verify(token, process.env.KEY)
+        const user = userModel.findOne({ _id: id })
+        res.status(200).json({
+            user
+        })
+    } catch {
+        res.status(401).json({
+            message: "Unsuccess"
+        })
+    }
+};

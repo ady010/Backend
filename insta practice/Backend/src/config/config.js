@@ -1,6 +1,7 @@
 const _config = {
-    PORT : process.env.PORT,
-    DB : process.env.DB_URL
+    PORT : process.env.PORT || 3000,
+    DB : process.env.DB_URL,
+    KEY : process.env.KEY
 }
 
 const config = Object.freeze(_config)
