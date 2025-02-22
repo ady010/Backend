@@ -5,11 +5,11 @@ const config = require("../config/config");
 
 module.exports.registerController = async (req, res) => {
     try {
-        const { username, email, password } = req.body;
+        const { username, email, password, posts } = req.body;
 
         if (!username || !email || !password) {
             return res.status(400).json({
-                message: "Please fill all the fields",
+                message: "Please fill all the fields....",
             });
         }
         const isUserExists = await userModel.findOne({
@@ -27,11 +27,13 @@ module.exports.registerController = async (req, res) => {
             username,
             email,
             password: hash,
+            posts
         });
 
         const token = jwt.sign(
             {
                 id: user._id,
+                username: user.username
             },
             config.KEY
         );
@@ -56,19 +58,21 @@ module.exports.loginController = async (req, res) => {
     const token = jwt.sign(
         {
             id: user._id,
+            username: user.username
         },
         config.KEY
     );
     res.status(200).json({ message: "Login Succsss", token });
 };
 
-module.exports.profileController = (req, res) => {
+module.exports.profileController = async (req, res) => {
 
-    try {
+    try { 
 
-        const token = localStorage.getItem('token')
-        const id = jwt.verify(token, process.env.KEY)
-        const user = userModel.findOne({ _id: id })
+        const user = await userModel.findById(req.user.id).populate('posts');
+        // console.log(user)
+
+        // console.log(user);
         res.status(200).json({
             user
         })
