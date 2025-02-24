@@ -71,7 +71,6 @@ module.exports.profileController = async (req, res) => {
 
         const user = await userModel.findById(req.user.id).populate('posts');
         // console.log(user)
-
         // console.log(user);
         res.status(200).json({
             user
