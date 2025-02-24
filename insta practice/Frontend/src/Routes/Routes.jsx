@@ -5,11 +5,13 @@ import Login from "../views/Login/Login";
 import Profile from "../views/Profile/profile";
 import Protected from "../Components/Protected";
 import Post from "../views/Posts/Post";
+import Feed from "../views/Feeds/Feed";
 
 const AppRoutes = () => {
   return (
     <Router>
       <Routes>
+        <Route path="/" element={<Feed/>}/>
         <Route path="/register" element={<Register/>}/>
         <Route path="/login" element={<Login/>}/>
         <Route path="/profile" element={<Protected><Profile/></Protected>}/>

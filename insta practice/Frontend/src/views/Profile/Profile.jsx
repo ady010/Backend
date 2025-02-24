@@ -1,10 +1,11 @@
 import axios from "axios";
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import navigate from "navigate";
 
 const Profile = () => {
   const [data, setData] = useState({});
-
+  const navigate = useNavigate()
 
   useEffect(() => {
     fetchData();
@@ -24,8 +25,8 @@ const Profile = () => {
       });
   };
 
-  const handleSubmit = (e)=>{
-    <Link to="/posts"></Link>
+  const onClick = (e)=>{
+   navigate("/posts")
   }
 
   return (
@@ -33,7 +34,7 @@ const Profile = () => {
       <div className="p-5">
         {/* top  */}
         <div className="butn" >
-        <button onSubmit={handleSubmit} type="submit" class=" bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-600">Create Post</button>
+        <button onClick={onClick} type="submit" class=" bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-600">Create Post</button>
         </div>
         <div className="flex flex-col mb-8">
           <img
