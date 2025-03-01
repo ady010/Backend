@@ -1,3 +1,5 @@
 module.exports.userController = (req, res)=>{
-    res.send("hello from user")
+
+    const { username, email, password} = req.body
+
 }
