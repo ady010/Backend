@@ -2,7 +2,11 @@ import React from 'react'
 
 const App = () => {
   return (
-    <div>App</div>
+    <main className='bg-sky-200 h-screen w-screen '>
+      <div className="box bg-white h-[40rem] w-[50rem] border- ">
+
+      </div>
+    </main>
   )
 }
 
