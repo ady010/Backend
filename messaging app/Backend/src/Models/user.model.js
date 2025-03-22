@@ -1,5 +1,6 @@
 const jwt = require("jsonwebtoken")
 const bcrypt = require("bcrypt")
+const config = require("../Config/config")
 
 const mongoose = require("mongoose")
 
@@ -21,8 +22,8 @@ userSchema.methods.generateToken = function (){
             id:this._id,
             username: this.username,
             email: this.email
-        }
-        
+        },
+        config.KEY
     )
 }
 
@@ -31,6 +32,8 @@ userSchema.methods.generateToken = function (){
 
 
 
+
+  
 const userModel = mongoose.model("user", userSchema)
 
 module.exports = userModel
